@@ -13,7 +13,7 @@
         <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 class="text-2xl font-semibold tracking-tight">Daily Calculator</h1>
-            <p class="text-sm text-slate-300">Units, cash, and quick deductions — updates instantly as you type.</p>
+            <p class="text-sm text-slate-300">Units, cash, deductions, and history — all in one view.</p>
           </div>
           <div class="text-xs text-slate-400">
             Tip: leave fields empty (treated as 0)
@@ -21,7 +21,8 @@
         </div>
       </header>
 
-      <main class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <main class="space-y-6">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <!-- Units -->
         <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm backdrop-blur">
           <div class="mb-4 flex items-center justify-between gap-3">
@@ -54,9 +55,30 @@
             </label>
           </div>
 
-          <div class="mt-5 flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3">
-            <div class="text-sm text-slate-300">Total Unit</div>
-            <div class="text-xl font-semibold tabular-nums" id="total_unit">0</div>
+          <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div class="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3">
+              <div class="text-sm text-slate-300">Total Unit</div>
+              <div class="text-xl font-semibold tabular-nums" id="total_unit">0</div>
+            </div>
+            <div class="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3">
+              <div>
+                <div class="text-sm text-slate-300">Deduction</div>
+                <div class="mt-1 text-xs text-slate-500">Amount to subtract from Total Unit</div>
+              </div>
+              <input
+                id="unit_deduction"
+                inputmode="decimal"
+                type="number"
+                step="any"
+                placeholder="0"
+                class="ml-4 w-28 rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-right text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              />
+            </div>
+          </div>
+
+          <div class="mt-3 flex items-center justify-between rounded-xl border border-indigo-600/60 bg-indigo-950/20 px-4 py-3">
+            <div class="text-sm text-slate-200">Net Unit (Total − Deduction)</div>
+            <div class="text-xl font-semibold tabular-nums text-indigo-300" id="net_unit">0</div>
           </div>
         </section>
 
@@ -102,70 +124,118 @@
             </label>
           </div>
 
-          <div class="mt-5 flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3">
-            <div class="text-sm text-slate-300">Total Cash</div>
-            <div class="text-xl font-semibold tabular-nums" id="total_cash">0</div>
+          <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div class="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3">
+              <div class="text-sm text-slate-300">Total Cash</div>
+              <div class="text-xl font-semibold tabular-nums" id="total_cash">0</div>
+            </div>
+            <div class="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3">
+              <div>
+                <div class="text-sm text-slate-300">Deduction</div>
+                <div class="mt-1 text-xs text-slate-500">Amount to subtract from Total Cash</div>
+              </div>
+              <input
+                id="cash_deduction"
+                inputmode="decimal"
+                type="number"
+                step="any"
+                placeholder="0"
+                class="ml-4 w-28 rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-right text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+              />
+            </div>
+          </div>
+
+          <div class="mt-3 flex items-center justify-between rounded-xl border border-emerald-600/60 bg-emerald-950/20 px-4 py-3">
+            <div class="text-sm text-slate-200">Net Cash (Total − Deduction)</div>
+            <div class="text-xl font-semibold tabular-nums text-emerald-300" id="net_cash">0</div>
+          </div>
+        </section>
+        </div>
+
+        <!-- Comparison & Save -->
+        <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm backdrop-blur">
+          <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 class="text-lg font-semibold">Summary &amp; Comparison</h2>
+              <p class="text-sm text-slate-300">Compare Net Unit with Net Cash and save a snapshot.</p>
+            </div>
+            <button
+              id="save_record_btn"
+              class="inline-flex items-center justify-center gap-2 rounded-full bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <span class="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.9)]"></span>
+              Save Record
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
+              <div class="text-xs uppercase tracking-wide text-slate-400">Net Unit</div>
+              <div class="mt-2 text-2xl font-semibold tabular-nums text-indigo-300" id="summary_net_unit">0</div>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
+              <div class="text-xs uppercase tracking-wide text-slate-400">Net Cash</div>
+              <div class="mt-2 text-2xl font-semibold tabular-nums text-emerald-300" id="summary_net_cash">0</div>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
+              <div class="flex items-center justify-between gap-2">
+                <div>
+                  <div class="text-xs uppercase tracking-wide text-slate-400">Difference</div>
+                  <div class="mt-1 text-xs text-slate-500">Net Unit − Net Cash</div>
+                </div>
+              </div>
+              <div class="mt-2 text-2xl font-semibold tabular-nums" id="comparison_diff">0</div>
+            </div>
           </div>
         </section>
 
-        <!-- Calculations -->
-        <section class="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm backdrop-blur">
-          <div class="mb-4">
-            <h2 class="text-lg font-semibold">Calculations &amp; Deductions</h2>
-            <p class="text-sm text-slate-300">Subtract manual amounts from totals.</p>
+        <!-- History -->
+        <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm backdrop-blur">
+          <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 class="text-lg font-semibold">History (Last 30 Days)</h2>
+              <p class="text-sm text-slate-300">Saved records are stored locally on this device only.</p>
+            </div>
+            <button
+              id="clear_history_btn"
+              class="inline-flex items-center justify-center rounded-full border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-rose-500 hover:text-rose-300"
+            >
+              Clear All History
+            </button>
           </div>
 
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div class="rounded-2xl border border-slate-800 bg-slate-950/30 p-4">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="text-sm font-medium text-slate-200">Calculation 1</div>
-                  <div class="mt-1 text-xs text-slate-400">(Total Unit − Manual)</div>
-                </div>
-                <div class="text-right">
-                  <div class="text-xs text-slate-400">Result</div>
-                  <div class="text-2xl font-semibold tabular-nums" id="calc_unit_result">0</div>
-                </div>
-              </div>
-              <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div class="rounded-xl border border-slate-800 bg-slate-950/40 px-3 py-2">
-                  <div class="text-xs text-slate-400">Total Unit</div>
-                  <div class="mt-1 text-base font-semibold tabular-nums" id="calc_total_unit">0</div>
-                </div>
-                <label class="block">
-                  <span class="mb-1 block text-xs text-slate-400">Manual input to subtract</span>
-                  <input id="unit_manual_subtract" inputmode="decimal" type="number" step="any" placeholder="0"
-                    class="w-full rounded-xl border border-slate-800 bg-slate-950/40 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
-                </label>
-              </div>
-            </div>
-
-            <div class="rounded-2xl border border-slate-800 bg-slate-950/30 p-4">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="text-sm font-medium text-slate-200">Calculation 2</div>
-                  <div class="mt-1 text-xs text-slate-400">(Total Cash − Manual)</div>
-                </div>
-                <div class="text-right">
-                  <div class="text-xs text-slate-400">Result</div>
-                  <div class="text-2xl font-semibold tabular-nums" id="calc_cash_result">0</div>
-                </div>
-              </div>
-              <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div class="rounded-xl border border-slate-800 bg-slate-950/40 px-3 py-2">
-                  <div class="text-xs text-slate-400">Total Cash</div>
-                  <div class="mt-1 text-base font-semibold tabular-nums" id="calc_total_cash">0</div>
-                </div>
-                <label class="block">
-                  <span class="mb-1 block text-xs text-slate-400">Manual input to subtract</span>
-                  <input id="cash_manual_subtract" inputmode="decimal" type="number" step="any" placeholder="0"
-                    class="w-full rounded-xl border border-slate-800 bg-slate-950/40 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" />
-                </label>
-              </div>
+          <div class="overflow-hidden rounded-2xl border border-slate-800">
+            <div class="max-h-80 overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead class="bg-slate-900/80 text-xs uppercase tracking-wide text-slate-400">
+                  <tr>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3 text-right">Total Unit</th>
+                    <th class="px-4 py-3 text-right">Total Cash</th>
+                    <th class="px-4 py-3 text-right">Difference</th>
+                    <th class="px-4 py-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="history_tbody" class="divide-y divide-slate-800 bg-slate-950/60">
+                  <tr id="history_empty_row">
+                    <td colspan="5" class="px-4 py-6 text-center text-xs text-slate-500">
+                      No records yet. Fill in today’s values and click <span class="font-semibold text-slate-300">Save Record</span>.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
       </main>
+
+      <!-- Save toast -->
+      <div
+        id="save_toast"
+        class="pointer-events-none fixed inset-x-0 top-4 z-50 mx-auto flex max-w-xs translate-y-2 items-center justify-center rounded-full border border-emerald-500/40 bg-slate-900/90 px-4 py-2 text-xs font-medium text-emerald-200 opacity-0 shadow-lg shadow-emerald-500/20 transition-all duration-200"
+      >
+        Saved successfully
+      </div>
 
       <footer class="mt-10 text-center text-xs text-slate-500">
         NCK Calculator — single page, works offline after first load.
@@ -191,12 +261,18 @@
       const els = {
         totalUnit: document.getElementById("total_unit"),
         totalCash: document.getElementById("total_cash"),
-        calcTotalUnit: document.getElementById("calc_total_unit"),
-        calcTotalCash: document.getElementById("calc_total_cash"),
-        unitManual: document.getElementById("unit_manual_subtract"),
-        cashManual: document.getElementById("cash_manual_subtract"),
-        calcUnitResult: document.getElementById("calc_unit_result"),
-        calcCashResult: document.getElementById("calc_cash_result"),
+        unitDeduction: document.getElementById("unit_deduction"),
+        cashDeduction: document.getElementById("cash_deduction"),
+        netUnit: document.getElementById("net_unit"),
+        netCash: document.getElementById("net_cash"),
+        summaryNetUnit: document.getElementById("summary_net_unit"),
+        summaryNetCash: document.getElementById("summary_net_cash"),
+        comparisonDiff: document.getElementById("comparison_diff"),
+        saveButton: document.getElementById("save_record_btn"),
+        clearHistoryButton: document.getElementById("clear_history_btn"),
+        historyBody: document.getElementById("history_tbody"),
+        historyEmptyRow: document.getElementById("history_empty_row"),
+        saveToast: document.getElementById("save_toast"),
       };
 
       function sumInputs(ids) {
@@ -210,17 +286,20 @@
         const totalUnit = sumInputs(unitIds);
         const totalCash = sumInputs(cashIds);
 
+        const unitDeduction = parseNumber(els.unitDeduction.value);
+        const cashDeduction = parseNumber(els.cashDeduction.value);
+
+        const netUnit = totalUnit - unitDeduction;
+        const netCash = totalCash - cashDeduction;
+        const difference = netUnit - netCash;
+
         els.totalUnit.textContent = formatNumber(totalUnit);
         els.totalCash.textContent = formatNumber(totalCash);
-
-        els.calcTotalUnit.textContent = formatNumber(totalUnit);
-        els.calcTotalCash.textContent = formatNumber(totalCash);
-
-        const unitResult = totalUnit - parseNumber(els.unitManual.value);
-        const cashResult = totalCash - parseNumber(els.cashManual.value);
-
-        els.calcUnitResult.textContent = formatNumber(unitResult);
-        els.calcCashResult.textContent = formatNumber(cashResult);
+        els.netUnit.textContent = formatNumber(netUnit);
+        els.netCash.textContent = formatNumber(netCash);
+        els.summaryNetUnit.textContent = formatNumber(netUnit);
+        els.summaryNetCash.textContent = formatNumber(netCash);
+        els.comparisonDiff.textContent = formatNumber(difference);
       }
 
       function wireRealtime(ids) {
@@ -233,10 +312,170 @@
 
       wireRealtime(unitIds);
       wireRealtime(cashIds);
-      els.unitManual.addEventListener("input", recalc);
-      els.cashManual.addEventListener("input", recalc);
+      els.unitDeduction.addEventListener("input", recalc);
+      els.cashDeduction.addEventListener("input", recalc);
+
+      // History handling
+      const HISTORY_KEY = "nck_calculator_history_v1";
+
+      function loadHistory() {
+        try {
+          const raw = localStorage.getItem(HISTORY_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveHistory(records) {
+        try {
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(records));
+        } catch {
+          // ignore quota or access errors
+        }
+      }
+
+      function cleanupOld(records) {
+        const now = Date.now();
+        const cutoff = now - 30 * 24 * 60 * 60 * 1000;
+        return records.filter((r) => typeof r.timestamp === "number" && r.timestamp >= cutoff);
+      }
+
+      let historyRecords = cleanupOld(loadHistory());
+
+      function renderHistory() {
+        const tbody = els.historyBody;
+        if (!tbody) return;
+
+        // Clear all rows
+        while (tbody.firstChild) {
+          tbody.removeChild(tbody.firstChild);
+        }
+
+        const effective = cleanupOld(historyRecords);
+        historyRecords = effective;
+        saveHistory(historyRecords);
+
+        if (!effective.length) {
+          const row = document.createElement("tr");
+          row.id = "history_empty_row";
+          row.innerHTML =
+            '<td colspan="5" class="px-4 py-6 text-center text-xs text-slate-500">No records yet. Fill in today’s values and click <span class="font-semibold text-slate-300">Save Record</span>.</td>';
+          tbody.appendChild(row);
+          return;
+        }
+
+        effective
+          .slice()
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .forEach((record) => {
+            const row = document.createElement("tr");
+            row.className = "hover:bg-slate-900/60 transition-colors";
+            const diffClass =
+              record.difference > 0
+                ? "text-emerald-300"
+                : record.difference < 0
+                ? "text-rose-300"
+                : "text-slate-200";
+
+            row.innerHTML = `
+              <td class="whitespace-nowrap px-4 py-3 text-xs text-slate-200">${record.displayDate}</td>
+              <td class="whitespace-nowrap px-4 py-3 text-right tabular-nums text-slate-200">${formatNumber(
+                record.totalUnit
+              )}</td>
+              <td class="whitespace-nowrap px-4 py-3 text-right tabular-nums text-slate-200">${formatNumber(
+                record.totalCash
+              )}</td>
+              <td class="whitespace-nowrap px-4 py-3 text-right tabular-nums ${diffClass}">${formatNumber(
+                record.difference
+              )}</td>
+              <td class="whitespace-nowrap px-4 py-3 text-right">
+                <button
+                  class="rounded-full border border-slate-700 px-2 py-1 text-[11px] font-medium text-slate-300 transition hover:border-rose-500 hover:text-rose-300"
+                  data-delete-id="${record.id}"
+                >
+                  Delete
+                </button>
+              </td>
+            `;
+
+            tbody.appendChild(row);
+          });
+      }
+
+      function showToast(message) {
+        const toast = els.saveToast;
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.remove("pointer-events-none");
+        toast.classList.remove("opacity-0", "translate-y-2");
+        toast.classList.add("opacity-100", "translate-y-0");
+        clearTimeout(showToast._timeoutId);
+        showToast._timeoutId = setTimeout(() => {
+          toast.classList.add("opacity-0", "translate-y-2");
+        }, 1600);
+      }
+
+      function handleSaveRecord() {
+        const totalUnit = sumInputs(unitIds);
+        const totalCash = sumInputs(cashIds);
+        const unitDeduction = parseNumber(els.unitDeduction.value);
+        const cashDeduction = parseNumber(els.cashDeduction.value);
+        const netUnit = totalUnit - unitDeduction;
+        const netCash = totalCash - cashDeduction;
+        const difference = netUnit - netCash;
+
+        const now = new Date();
+        const record = {
+          id: `${now.getTime()}-${Math.random().toString(36).slice(2, 8)}`,
+          timestamp: now.getTime(),
+          displayDate: now.toLocaleString(),
+          totalUnit,
+          totalCash,
+          netUnit,
+          netCash,
+          difference,
+        };
+
+        historyRecords.push(record);
+        historyRecords = cleanupOld(historyRecords);
+        saveHistory(historyRecords);
+        renderHistory();
+        showToast("Record saved successfully");
+      }
+
+      if (els.saveButton) {
+        els.saveButton.addEventListener("click", handleSaveRecord);
+      }
+
+      if (els.clearHistoryButton) {
+        els.clearHistoryButton.addEventListener("click", () => {
+          historyRecords = [];
+          saveHistory(historyRecords);
+          renderHistory();
+          showToast("History cleared");
+        });
+      }
+
+      if (els.historyBody) {
+        els.historyBody.addEventListener("click", (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLElement)) return;
+          const button = target.closest("[data-delete-id]");
+          if (!button) return;
+          const id = button.getAttribute("data-delete-id");
+          if (!id) return;
+          historyRecords = historyRecords.filter((r) => r.id !== id);
+          saveHistory(historyRecords);
+          renderHistory();
+          showToast("Record deleted");
+        });
+      }
 
       recalc();
+      renderHistory();
     </script>
   </body>
 </html>
