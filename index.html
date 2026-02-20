@@ -5,7 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NCK Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json" />
+    
+    <!-- Theme Color (Android & Chrome) -->
     <meta name="theme-color" content="#0f172a" />
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="NCK Calc" />
+    
+    <!-- Android Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="NCK Calc" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
   </head>
   <body class="min-h-screen bg-slate-950 text-slate-100">
     <div class="mx-auto w-full max-w-5xl px-4 py-10">
@@ -476,6 +494,20 @@
 
       recalc();
       renderHistory();
+
+      // Service Worker Registration for PWA
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./sw.js")
+            .then((registration) => {
+              console.log("Service Worker registered:", registration.scope);
+            })
+            .catch((error) => {
+              console.log("Service Worker registration failed:", error);
+            });
+        });
+      }
     </script>
   </body>
 </html>
